@@ -1,0 +1,22 @@
+services:
+  open-webui:
+    image: ghcr.io/open-webui/open-webui:main
+    container_name: open-webui
+    restart: always
+    volumes:
+      - ${OPEN_WEBUI_DATA_FOLDER:-./open-webui_data}:/app/backend/data
+    environment:
+      - OLLAMA_BASE_URL=http://${OLLAMA_IP_ADDRESS}:11434
+      - WEBUI_SECRET_KEY=${WEBUI_SECRET_KEY}
+    ports:
+      - ${OPEN_WEBUI_PORT:-8080}:8080
+    networks:
+      local:
+        ipv4_address: 172.${SUBNET_NUMBER:-20}.0.2
+
+networks:
+  local:
+    name: openwebui-local-network
+    ipam:
+      config:
+        - subnet: 172.${SUBNET_NUMBER:-20}.0.0/16
